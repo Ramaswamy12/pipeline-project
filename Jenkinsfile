@@ -4,7 +4,6 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        
         sh 'docker build -t my-flask .'
         sh 'docker tag my-flask $DOCKER_BFLASK_IMAGE'
       }
@@ -22,11 +21,17 @@ pipeline {
         }
       }
     }
+    
   }
-  post {
-    always {
-      sh 'docker rm -f mypycont'
-      sh 'docker run --name mypycont -d -p 3000:5000 my-flask'
-    }
-  }
+
+post{
+      always{
+            sh 'docker rm -f mypycont'
+            sh 'docker run --name mypycont -d -p 3000:5000 my-flask'
+            mail to: "rampillamarri@gmail.com",
+            subject: "Notification mail from jenkins",
+            body: "CiCd pipeline"
+        }
+}
+
 }
